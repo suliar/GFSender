@@ -11,11 +11,9 @@ type Twilio struct {
 	accountSid string
 }
 
-func NewQuoteClient(twilio gotwilio.Twilio, token string, accountSid string) *Twilio {
+func NewQuoteClient(twilio gotwilio.Twilio) *Twilio {
 	return &Twilio{
 		twilio:     twilio,
-		token:      token,
-		accountSid: accountSid,
 	}
 }
 
