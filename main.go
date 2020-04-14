@@ -1,39 +1,41 @@
 package main
 
 import (
-	"github.com/sfreiberg/gotwilio"
-	 quote "github.com/suliar/GFSender/quotes"
+	"fmt"
+	quote "github.com/suliar/GFSender/quotes"
+	"log"
+	"os"
 )
 
 func main() {
-	//quotes := []string{
-	//	"This is something special - Gege",
-	//	"I want to show you real love - Gege",
-	//	"Happy Birthday to my favourite person - Gege",
-	//	"Thank you for being the best girlfriend ever - Gege",
-	//	"I want to make sure you're doing this - Gege",
-	//}
-	//
-	//rand.Seed(time.Now().Unix())
-	//randomQuotes := quotes[rand.Intn(len(quotes))]
 
-	accountSid := "AC8c863d13e1fb9c6068f86926213a0d52"
-	token := "88fb19bbcb95938892188a49378a352a"
+	var (
+		accountSid string
+		token      string
+		fromMobile string
+		toMobile   string
+	)
 
-	twilioClient := gotwilio.NewTwilioClient(accountSid, token)
+	for k, v := range map[string]*string{
+		"ACCOUNT_SID": &accountSid,
+		"TOKEN":       &token,
+		"FROM_MOBILE": &fromMobile,
+		"TO_MOBILE":   &toMobile,
+	} {
+		var ok bool
+		if *v, ok = os.LookupEnv(k); !ok {
+			_ = fmt.Errorf("missing env variables: %s", k)
+		}
+	}
 
-	//_, _, err := twilioClient.SendSMS("+18646252838",
-	//	"+447948847694",
-	//	randomQuotes,
-	//	"",
-	//	"")
-	//if err != nil {
-	//	log.Fatalf("cannot send sms: %v", err)
-	//}
+	twiClient := quote.NewTwilio(fromMobile,
+		toMobile,
+		accountSid,
+		token)
+	res, err := twiClient.SendQuotes("do something")
+	if err != nil {
+		log.Fatalf("cannot send SMS %v", err)
+	}
 
-
-
-	//tClient := quote.NewQuoteClient(twilioClient)
-//
-
+	fmt.Println(res)
 }
