@@ -32,7 +32,7 @@ func main() {
 		toMobile,
 		accountSid,
 		token)
-	res, err := twiClient.SendQuotes("do something")
+	res, err := twiClient.SendQuotes("")
 	if err != nil {
 		log.Fatalf("cannot send SMS %v", err)
 	}
