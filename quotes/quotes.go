@@ -11,6 +11,9 @@ var quotes = []string{
 	"Happy Birthday to my favourite person",
 	"Thank you for being the best girlfriend ever",
 	"I want to make sure you're doing this",
+	"What would I do without you aye",
+	"I'm so proud of you",
+	"I want you to know that I love you",
 }
 
 func RandomQuote() string {
