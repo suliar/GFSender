@@ -31,6 +31,7 @@ func (t *Twilio) SendQuotes(message string) (bool, error) {
 	}
 
 	twilioClient := gotwilio.NewTwilioClient(t.accountSid, t.authToken)
+
 	_, _, err := twilioClient.SendSMS(t.from,
 		t.to,
 		message,

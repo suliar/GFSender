@@ -1,7 +1,10 @@
 package quotes
 
 import (
+	"context"
+	"io/ioutil"
 	"math/rand"
+	"net/http"
 	"time"
 )
 
@@ -22,3 +25,33 @@ func RandomQuote() string {
 	return randomQuote
 }
 
+func RandomBibleVerses() (string, error) {
+	req, err := http.NewRequestWithContext(context.Background(),
+		"GET",
+		"http://www.ourmanna.com/verses/api/get?format=text&order=random",
+		nil)
+
+	if err != nil {
+		return "", err
+	}
+
+	// Create a context with a timeout of 50 milliseconds.
+	ctx, cancel := context.WithTimeout(req.Context(), 50*time.Millisecond)
+	defer cancel()
+
+	req = req.WithContext(ctx)
+
+	res, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return "", err
+	}
+	defer res.Body.Close()
+
+	verses, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(verses), nil
+
+}
