@@ -35,8 +35,7 @@ func RandomBibleVerses() (string, error) {
 		return "", err
 	}
 
-	// Create a context with a timeout of 50 milliseconds.
-	ctx, cancel := context.WithTimeout(req.Context(), 50*time.Millisecond)
+	ctx, cancel := context.WithTimeout(req.Context(), 30*time.Second)
 	defer cancel()
 
 	req = req.WithContext(ctx)
