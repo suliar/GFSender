@@ -9,18 +9,18 @@ type SendSMSChecker interface {
 }
 
 type Twilio struct {
-	from       string
-	to         string
-	accountSid string
-	authToken  string
+	From       string
+	To         string
+	AccountSid string
+	AuthToken  string
 }
 
 func NewTwilio(from string, to string, accountSid string, authToken string) Twilio {
 	return Twilio{
-		from:       from,
-		to:         to,
-		authToken:  authToken,
-		accountSid: accountSid,
+		From:       from,
+		To:         to,
+		AuthToken:  authToken,
+		AccountSid: accountSid,
 	}
 
 }
@@ -30,10 +30,10 @@ func (t *Twilio) SendQuotes(message string) (bool, error) {
 		message = RandomQuote()
 	}
 
-	twilioClient := gotwilio.NewTwilioClient(t.accountSid, t.authToken)
+	twilioClient := gotwilio.NewTwilioClient(t.AccountSid, t.AuthToken)
 
-	_, _, err := twilioClient.SendSMS(t.from,
-		t.to,
+	_, _, err := twilioClient.SendSMS(t.From,
+		t.To,
 		message,
 		"",
 		"")
