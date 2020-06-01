@@ -32,20 +32,14 @@ func main() {
 		}
 	}
 
-	controller := controllers.Controller{}
+	cm := quote.NewTwilio(fromMobile, GFMobile, accountSid, token)
+
+	newController := controllers.New(cm)
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/quotes", controller.SendQuotes(quote.NewTwilio(
-		fromMobile,
-		GFMobile,
-		accountSid,
-		token))).Methods("GET")
+	router.HandleFunc("/quotes", newController.SendQuotes()).Methods("GET")
 
-	router.HandleFunc("/dailyBible", controller.SendBibleVerses(quote.NewTwilio(
-		fromMobile,
-		GFMobile,
-		accountSid,
-		token))).Methods("GET")
+	router.HandleFunc("/dailyBible", newController.SendBibleVerses()).Methods("GET")
 	log.Fatal(http.ListenAndServe(":8080", router))
 
 }

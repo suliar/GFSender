@@ -15,8 +15,8 @@ type Twilio struct {
 	AuthToken  string
 }
 
-func NewTwilio(from string, to string, accountSid string, authToken string) Twilio {
-	return Twilio{
+func NewTwilio(from string, to string, accountSid string, authToken string) *Twilio {
+	return &Twilio{
 		From:       from,
 		To:         to,
 		AuthToken:  authToken,

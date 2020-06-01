@@ -8,21 +8,21 @@ import (
 )
 
 type Controller struct {
+	controller quote.SendSMSChecker
 }
 
-func (c Controller) SendBibleVerses(q quote.Twilio) http.HandlerFunc {
+func New(controller quote.SendSMSChecker) *Controller {
+	return &Controller{controller: controller}
+}
+
+func (c Controller) SendBibleVerses() http.HandlerFunc {
 	return func(w http.ResponseWriter, request *http.Request) {
 		bibleVerse, err := quote.RandomBibleVerses()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		twiClient := quote.NewTwilio(q.From,
-			q.To,
-			q.AccountSid,
-			q.AuthToken)
-
-		_, err = twiClient.SendQuotes(bibleVerse)
+		_, err = c.controller.SendQuotes(bibleVerse)
 		if err != nil {
 			log.Fatalf("cannot send SMS %v", err)
 		}
