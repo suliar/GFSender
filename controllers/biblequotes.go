@@ -15,14 +15,14 @@ func New(controller quote.SendSMSChecker) *Controller {
 	return &Controller{controller: controller}
 }
 
-func (c Controller) SendBibleVerses() http.HandlerFunc {
+func (c Controller) SendBibleVerses(from, to string) http.HandlerFunc {
 	return func(w http.ResponseWriter, request *http.Request) {
 		bibleVerse, err := quote.RandomBibleVerses()
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		_, err = c.controller.SendQuotes(bibleVerse)
+		err = c.controller.SendQuotes(from, to, bibleVerse)
 		if err != nil {
 			log.Fatalf("cannot send SMS %v", err)
 		}

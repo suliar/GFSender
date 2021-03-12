@@ -51,5 +51,4 @@ func RandomBibleVerses() (string, error) {
 	}
 
 	return string(verses), nil
-
 }

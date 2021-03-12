@@ -2,12 +2,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/suliar/GFSender/controllers"
-	quote "github.com/suliar/GFSender/quotes"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/gorilla/mux"
+	"github.com/sfreiberg/gotwilio"
+
+	"github.com/suliar/GFSender/controllers"
+	quote "github.com/suliar/GFSender/quotes"
 )
 
 var (
@@ -32,14 +35,16 @@ func main() {
 		}
 	}
 
-	cm := quote.NewTwilio(fromMobile, GFMobile, accountSid, token)
+	twilioClient := gotwilio.NewTwilioClient(accountSid, token)
+
+	cm := quote.NewTwilio(twilioClient)
 
 	newController := controllers.New(cm)
 
 	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/quotes", newController.SendQuotes()).Methods("GET")
 
-	router.HandleFunc("/dailyBible", newController.SendBibleVerses()).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8080", router))
+	router.HandleFunc("/daily-bible",
+		newController.SendBibleVerses(fromMobile, GFMobile)).Methods("GET")
+	log.Fatal(http.ListenAndServe(":8888", router))
 
 }

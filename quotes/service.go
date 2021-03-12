@@ -1,45 +1,44 @@
 package quotes
 
 import (
+	"fmt"
+
 	"github.com/sfreiberg/gotwilio"
 )
 
 type SendSMSChecker interface {
-	SendQuotes(message string) (bool, error)
+	SendQuotes(from, to, message string) error
 }
 
-type Twilio struct {
-	From       string
-	To         string
-	AccountSid string
-	AuthToken  string
+type TwilioClient interface {
+	SendSMS(from, to, body, statusCallback, applicationSid string) (smsResponse *gotwilio.SmsResponse, exception *gotwilio.Exception, err error)
 }
 
-func NewTwilio(from string, to string, accountSid string, authToken string) *Twilio {
-	return &Twilio{
-		From:       from,
-		To:         to,
-		AuthToken:  authToken,
-		AccountSid: accountSid,
+type twilio struct {
+	twilio TwilioClient
+}
+
+func NewTwilio(client TwilioClient) SendSMSChecker {
+	return twilio{
+		twilio: client,
 	}
 
 }
 
-func (t *Twilio) SendQuotes(message string) (bool, error) {
+func (t twilio) SendQuotes(from string, to, message string) error {
 	if message == "" {
 		message = RandomQuote()
 	}
 
-	twilioClient := gotwilio.NewTwilioClient(t.AccountSid, t.AuthToken)
-
-	_, _, err := twilioClient.SendSMS(t.From,
-		t.To,
+	_, _, err := t.twilio.SendSMS(
+		from,
+		to,
 		message,
 		"",
 		"")
 	if err != nil {
-		return false, err
+		return fmt.Errorf("send_sms: %w", err)
 	}
 
-	return true, nil
+	return nil
 }
