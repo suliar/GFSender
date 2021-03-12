@@ -30,7 +30,7 @@ func main() {
 		"S_MOBILE":    &SMobile,
 	} {
 		var ok bool
-		if *v, ok = os.LookupEnv(k); !ok {
+		if *v = os.Getenv(k); !ok {
 			_ = fmt.Errorf("missing env variables: %s", k)
 		}
 	}
