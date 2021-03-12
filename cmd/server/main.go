@@ -43,8 +43,13 @@ func main() {
 
 	router := mux.NewRouter().StrictSlash(true)
 
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8888"
+	}
+
 	router.HandleFunc("/daily-bible",
 		newController.SendBibleVerses(fromMobile, GFMobile)).Methods("GET")
-	log.Fatal(http.ListenAndServe(":8888", router))
+	log.Fatal(http.ListenAndServe(":"+port, router))
 
 }
