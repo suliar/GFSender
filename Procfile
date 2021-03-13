@@ -1,1 +1,1 @@
-web: GFSender
+web: bin/GFSender
