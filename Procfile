@@ -1,1 +1,2 @@
-web: github.com/suliar/GFSender
+web: go run cmd/server/main.go
+
