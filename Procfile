@@ -1,1 +1,1 @@
-web: bin/GFSender
+web: github.com/suliar/GFSender
