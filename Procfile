@@ -1,2 +1,2 @@
-web: go run cmd/server/main.go
+web: ./bin/server
 
