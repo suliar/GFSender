@@ -2,6 +2,7 @@ package quotes
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/http"
@@ -50,5 +51,7 @@ func RandomBibleVerses() (string, error) {
 		return "", err
 	}
 
-	return string(verses), nil
+	newVerse := fmt.Sprintf("Word of the day:\n\n %s", verses)
+
+	return newVerse, nil
 }

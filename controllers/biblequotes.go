@@ -15,7 +15,7 @@ func New(controller quote.SendSMSChecker) *Controller {
 	return &Controller{controller: controller}
 }
 
-func (c Controller) SendBibleVerses(from, to string) http.HandlerFunc {
+func (c Controller) SendBibleVerses(from string, to []string) http.HandlerFunc {
 	return func(w http.ResponseWriter, request *http.Request) {
 		bibleVerse, err := quote.RandomBibleVerses()
 		if err != nil {

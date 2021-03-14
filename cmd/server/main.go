@@ -19,6 +19,7 @@ var (
 	fromMobile string
 	GFMobile   string
 	SMobile    string
+	MMobile    string
 )
 
 func main() {
@@ -28,6 +29,7 @@ func main() {
 		"FROM_MOBILE": &fromMobile,
 		"GF_MOBILE":   &GFMobile,
 		"S_MOBILE":    &SMobile,
+		"M_MOBILE":    &MMobile,
 	} {
 		var ok bool
 		if *v = os.Getenv(k); !ok {
@@ -48,8 +50,10 @@ func main() {
 		port = "8888"
 	}
 
+	numbers := []string{GFMobile, SMobile, MMobile}
+
 	router.HandleFunc("/daily-bible",
-		newController.SendBibleVerses(fromMobile, GFMobile)).Methods("GET")
+		newController.SendBibleVerses(fromMobile, numbers)).Methods("GET")
 	log.Fatal(http.ListenAndServe(":"+port, router))
 
 }

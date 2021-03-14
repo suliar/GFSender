@@ -46,7 +46,7 @@ func TestTwilio_SendQuotes(t *testing.T) {
 
 		smsChecker := quotes.NewTwilio(twiolioClient)
 
-		err := smsChecker.SendQuotes(fromMessage, toMessage, "")
+		err := smsChecker.SendQuotes(fromMessage, []string{toMessage}, "")
 
 		require.Error(t, err)
 
@@ -80,7 +80,7 @@ func TestTwilio_SendQuotes(t *testing.T) {
 
 		smsChecker := quotes.NewTwilio(twiolioClient)
 
-		err := smsChecker.SendQuotes(fromMessage, toMessage, "")
+		err := smsChecker.SendQuotes(fromMessage, []string{toMessage}, "")
 
 		require.NoError(t, err)
 	})
@@ -113,7 +113,7 @@ func TestTwilio_SendQuotes(t *testing.T) {
 
 		smsChecker := quotes.NewTwilio(twiolioClient)
 
-		err := smsChecker.SendQuotes(fromMessage, toMessage, someMessage)
+		err := smsChecker.SendQuotes(fromMessage, []string{toMessage}, someMessage)
 
 		require.NoError(t, err)
 	})

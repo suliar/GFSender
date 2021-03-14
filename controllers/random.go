@@ -6,11 +6,11 @@ import (
 	"net/http"
 )
 
-func (c Controller) SendQuotes(from, to, messaage string) http.HandlerFunc {
+func (c Controller) SendQuotes(from string, to []string, message string) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		_, _ = fmt.Fprint(w, "Sending Random Quotes")
 
-		err := c.controller.SendQuotes(from, to, messaage)
+		err := c.controller.SendQuotes(from, to, message)
 		if err != nil {
 			log.Fatalf("cannot send SMS %v", err)
 		}

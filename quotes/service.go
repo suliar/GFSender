@@ -7,7 +7,7 @@ import (
 )
 
 type SendSMSChecker interface {
-	SendQuotes(from, to, message string) error
+	SendQuotes(from string, to []string, message string) error
 }
 
 type TwilioClient interface {
@@ -25,19 +25,21 @@ func NewTwilio(client TwilioClient) SendSMSChecker {
 
 }
 
-func (t twilio) SendQuotes(from string, to, message string) error {
+func (t twilio) SendQuotes(from string, to []string, message string) error {
 	if message == "" {
 		message = RandomQuote()
 	}
 
-	_, _, err := t.twilio.SendSMS(
-		from,
-		to,
-		message,
-		"",
-		"")
-	if err != nil {
-		return fmt.Errorf("send_sms: %w", err)
+	for _, v := range to {
+		_, _, err := t.twilio.SendSMS(
+			from,
+			v,
+			message,
+			"",
+			"")
+		if err != nil {
+			return fmt.Errorf("send_sms: %w", err)
+		}
 	}
 
 	return nil
