@@ -28,7 +28,7 @@ func RandomQuote() string {
 
 func RandomBibleVerses() (string, error) {
 	req, err := http.NewRequest("GET",
-		"http://www.ourmanna.com/verses/api/get?format=text&order=random",
+		"https://labs.bible.org/api/?passage=votd",
 		nil)
 
 	if err != nil {
