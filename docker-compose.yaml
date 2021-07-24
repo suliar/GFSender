@@ -1,0 +1,10 @@
+version: '3.4'
+services:
+  sender:
+    container_name: "quote-sender"
+    build:
+      context: .
+    ports:
+    - 8888:8888
+    environment:
+

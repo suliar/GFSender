@@ -5,12 +5,15 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/gorilla/mux"
 	"github.com/sfreiberg/gotwilio"
 
-	"github.com/suliar/GFSender/controllers"
-	quote "github.com/suliar/GFSender/quotes"
+	"github.com/suliar/GFSender/internal/bible"
+	quote "github.com/suliar/GFSender/internal/quotes"
+	transportHttp "github.com/suliar/GFSender/internal/transport/http"
+	"github.com/suliar/GFSender/internal/twilio"
 )
 
 var (
@@ -20,6 +23,7 @@ var (
 	GFMobile   string
 	SMobile    string
 	MMobile    string
+	BibleURL   string
 )
 
 func main() {
@@ -30,6 +34,7 @@ func main() {
 		"GF_MOBILE":   &GFMobile,
 		"S_MOBILE":    &SMobile,
 		"M_MOBILE":    &MMobile,
+		"BIBLE_URL":   &BibleURL,
 	} {
 		var ok bool
 		if *v = os.Getenv(k); !ok {
@@ -37,23 +42,37 @@ func main() {
 		}
 	}
 
+	numbers := []string{GFMobile, SMobile, MMobile}
 	twilioClient := gotwilio.NewTwilioClient(accountSid, token)
 
-	cm := quote.NewTwilio(twilioClient)
+	twn, err := twilio.NewTwilio(fromMobile, numbers, twilioClient)
+	if err != nil {
+		log.Fatal("could not create new twilio")
+		return
+	}
 
-	newController := controllers.New(cm)
+	client := &http.Client{Timeout: 10 * time.Second}
+	quo, err := quote.New(BibleURL, client)
+	if err != nil {
+		log.Fatal("could not create new quote")
+		return
+	}
 
-	router := mux.NewRouter().StrictSlash(true)
+	ser, err := bible.New(twn, quo)
+	if err != nil {
+		log.Fatal("could not create new bible")
+		return
+	}
+
+	handler := transportHttp.New(ser)
 
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8888"
 	}
 
-	numbers := []string{GFMobile, SMobile, MMobile}
-
-	router.HandleFunc("/daily-bible",
-		newController.SendBibleVerses(fromMobile, numbers)).Methods("GET")
+	router := mux.NewRouter()
+	router.HandleFunc("/daily", handler.BibleSender).Methods(http.MethodGet)
 	log.Fatal(http.ListenAndServe(":"+port, router))
 
 }
